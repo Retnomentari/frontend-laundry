@@ -1,6 +1,6 @@
 import React from "react"
 import axios from "axios"
-import { baseUrl, formatNumber } from "../config"
+import { baseUrl, formatNumber, authorization } from "../config"
 
 export default class Dashboard extends React.Component {
     constructor() {
@@ -22,7 +22,7 @@ export default class Dashboard extends React.Component {
 
         // get jumlah member
         let endpoint = `${baseUrl}/member`
-        axios.get(endpoint)
+        axios.get(endpoint, authorization)
             .then(response => {
                 this.setState({ jmlMember: response.data.length })
             })
@@ -30,7 +30,7 @@ export default class Dashboard extends React.Component {
 
         // get jumlah paket
         endpoint = `${baseUrl}/paket`
-        axios.get(endpoint)
+        axios.get(endpoint, authorization)
             .then(response => {
                 this.setState({ jmlPaket: response.data.length })
             })
@@ -38,7 +38,7 @@ export default class Dashboard extends React.Component {
 
         // get jumlah transaksi
         endpoint = `${baseUrl}/transaksi`
-        axios.get(endpoint)
+        axios.get(endpoint, authorization)
             .then(response => {
                 let dataTransaksi = response.data
                 let income = 0

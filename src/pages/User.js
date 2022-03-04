@@ -1,7 +1,7 @@
 import React from "react";
 import { Modal } from "bootstrap";
 import axios from "axios";
-import { baseUrl } from "../config.js";
+import { baseUrl, authorization } from "../config.js";
 
 class User extends React.Component {
     constructor() {
@@ -62,7 +62,7 @@ class User extends React.Component {
 
             let endpoint = `${baseUrl}/users/` + id_user
 
-            axios.delete(endpoint)
+            axios.delete(endpoint, authorization)
                 .then(response => {
                     window.alert(response.data.message)
                     this.getData()
@@ -99,7 +99,7 @@ class User extends React.Component {
             // let temp = this.state.pakets
             // temp.push(data) // menambah data pada array
             // this.setState({ pakets: temp })
-            axios.post(endpoint, data)
+            axios.post(endpoint, data, authorization)
                 .then(response => {
                     window.alert(response.data.message)
                     this.getData()
@@ -120,7 +120,7 @@ class User extends React.Component {
 
             }
 
-            axios.put(endpoint, data)
+            axios.put(endpoint, data, authorization)
                 .then(response => {
                     window.alert(response.data.message)
                     this.getData()
@@ -144,7 +144,7 @@ class User extends React.Component {
 
     getData() {
         let endpoint = `${baseUrl}/users`
-        axios.get(endpoint)
+        axios.get(endpoint, authorization)
             .then(response => {
                 this.setState({ users: response.data })
             })

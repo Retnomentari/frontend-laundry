@@ -1,7 +1,7 @@
 import React from "react";
 import { Modal } from "bootstrap";
 import axios from "axios";
-import { baseUrl, formatNumber } from "../config.js";
+import { baseUrl, formatNumber, authorization } from "../config.js";
 
 class Paket extends React.Component {
     constructor() {
@@ -57,7 +57,7 @@ class Paket extends React.Component {
 
             let endpoint = `${baseUrl}/paket/` + id_paket
 
-            axios.delete(endpoint)
+            axios.delete(endpoint, authorization)
                 .then(response => {
                     window.alert(response.data.message)
                     this.getData()
@@ -92,7 +92,7 @@ class Paket extends React.Component {
             // let temp = this.state.pakets
             // temp.push(data) // menambah data pada array
             // this.setState({ pakets: temp })
-            axios.post(endpoint, data)
+            axios.post(endpoint, data, authorization)
                 .then(response => {
                     window.alert(response.data.message)
                     this.getData()
@@ -110,7 +110,7 @@ class Paket extends React.Component {
                 harga: this.state.harga
             }
 
-            axios.put(endpoint, data)
+            axios.put(endpoint, data, authorization)
                 .then(response => {
                     window.alert(response.data.message)
                     this.getData()
@@ -134,7 +134,7 @@ class Paket extends React.Component {
 
     getData() {
         let endpoint = `${baseUrl}/paket`
-        axios.get(endpoint)
+        axios.get(endpoint, authorization)
             .then(response => {
                 this.setState({ pakets: response.data })
             })
