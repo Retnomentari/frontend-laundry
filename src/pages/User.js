@@ -158,7 +158,7 @@ class User extends React.Component {
         let user = JSON.parse(localStorage.getItem("user"))
 
         // cara kedua
-        if (user.role === 'Admin' || user.role === 'Kasir') {
+        if (user.role === 'Admin') {
             this.setState({
                 visible: true
             })

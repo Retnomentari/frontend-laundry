@@ -69,14 +69,6 @@ class Member extends React.Component {
                     this.getData()
                 })
                 .catch(error => console.log(error))
-            // mencari posisi index dari data yang akan dihapus
-            // let temp = this.state.members
-            // let index = temp.findIndex(member => member.id_member === id_member)
-
-            // menghapus data pada array
-            // temp.splice(index,1)
-
-            // this.setState({members: temp})
         }
     }
 
@@ -154,6 +146,7 @@ class Member extends React.Component {
             )
         }
     }
+    
     getData() {
         let endpoint = `${baseUrl}/member`
         axios.get(endpoint, authorization)
