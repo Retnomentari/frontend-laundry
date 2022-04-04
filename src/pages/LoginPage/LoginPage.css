@@ -1,0 +1,15 @@
+.btn-primary {
+    color: #fff;
+    background: linear-gradient(90deg,#da8cff,#9a55ff) !important;
+    border-color: #da8cff !important;
+}
+
+.text-1{
+    color: #9a55ff !important;
+}
+
+.icon-img{
+    width: 70px;
+    height: 70px;
+    margin-bottom: 2rem;
+}

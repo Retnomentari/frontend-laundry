@@ -1,34 +1,43 @@
 import React from "react";
-import "./App.css";
+// import "./App.css";
+import styled from 'styled-components';
 import Member from "./pages/Member";
 import Paket from "./pages/Paket";
 import User from "./pages/User";
+import Outlet from "./pages/Outlet";
 import Transaksi from "./pages/Transaksi";
-import Login from "./pages/Login";
-import Navbar from "./components/Navbar";
 import FormTransaksi from "./pages/FormTransaksi";
-import Footer from "./components/Footer";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
+import LoginPage from "./pages/LoginPage/LoginPage";
+import Sidebar from "./components/Sidebar";
 
 
 export default function App() {
     return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<Navbar><Dashboard /><Footer /></Navbar>} />
-                <Route path="/auth" element={<Login />} />
-                <Route path="/member"
-                    element={<Navbar><Member /><Footer /></Navbar>} />
-                <Route path="/paket"
-                    element={<Navbar><Paket /><Footer /></Navbar>} />
-                <Route path="/user"
-                    element={<Navbar><User /><Footer /></Navbar>} />
-                <Route path="/transaksi"
-                    element={<Navbar><Transaksi /><Footer /></Navbar>} />
-                <Route path="/form_transaksi"
-                    element={<Navbar><FormTransaksi /><Footer /></Navbar>} />
-            </Routes>
-        </BrowserRouter>
+        <Div>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<><Sidebar /><Dashboard /></>} />
+                    <Route path="/auth" element={<LoginPage />} />
+                    <Route path="/member"
+                        element={<><Sidebar /><Member /></>} />
+                    <Route path="/paket"
+                        element={<><Sidebar /><Paket /></>} />
+                    <Route path="/user"
+                        element={<><Sidebar /><User /></>} />
+                    <Route path="/outlet"
+                        element={<><Sidebar/><Outlet/></>}/>
+                    <Route path="/transaksi"
+                        element={<><Sidebar /><Transaksi /></>} />
+                    <Route path="/form_transaksi"
+                        element={<><Sidebar /><FormTransaksi /></>} />
+                </Routes>
+            </BrowserRouter>
+        </Div>
     );
 } 
+
+const Div = styled.div `
+position: relative;
+`;

@@ -2,6 +2,11 @@ import React from "react";
 import { Modal } from "bootstrap";
 import axios from "axios";
 import { authorization, baseUrl } from "../config.js";
+import NavbarPage from "../components/NavbarPage.js";
+import { MdModeEditOutline } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
+import {IoMdSearch} from "react-icons/io";
+import {AiOutlineAudit} from "react-icons/ai"
 
 class Member extends React.Component {
     constructor() {
@@ -15,7 +20,8 @@ class Member extends React.Component {
             action: "",
             role: "",
             visible: true,
-            members: []
+            members: [],
+            masterMembers: []
         }
 
         if (!localStorage.getItem("token")) {
@@ -75,6 +81,23 @@ class Member extends React.Component {
     simpanData(event) {
         event.preventDefault();
         // preventDefault -> mencegah aksi default dari form submit
+
+        if (document.getElementById("nama").value == "") {
+			alert("missing nama");
+			return;
+		}
+        if (document.getElementById("jenis_kelamin").value == "") {
+			alert("missing jenis kelamin");
+			return;
+		}
+        if (document.getElementById("telp").value == "") {
+			alert("missing telepon");
+			return;
+		}
+        if (document.getElementById("alamat").value == "") {
+			alert("missing alamat");
+			return;
+		}
 
         // cek aksi tambah atau ubah
         if (this.state.action === "tambah") {
@@ -146,12 +169,13 @@ class Member extends React.Component {
             )
         }
     }
-    
+
     getData() {
         let endpoint = `${baseUrl}/member`
         axios.get(endpoint, authorization)
             .then(response => {
                 this.setState({ members: response.data })
+                this.setState({ masterMembers: response.data })
             })
             .catch(error => console.log(error))
     }
@@ -178,96 +202,120 @@ class Member extends React.Component {
         }
     }
 
+    searching(ev) {
+        let code = ev.keyCode;
+        if (code === 13) {
+            let data = this.state.masterMembers;
+            let found = data.filter(it =>
+                it.nama.toLowerCase().includes(this.state.search.toLowerCase()))
+            this.setState({ members: found });
+        }
+    }
+
     render() {
         return (
-            <div className="container">
-                <div className="card">
-                    <div className="card-header">
-                        <div className="card-header bg-success">
-                            <h3 className="text-white">
-                                List of Member
-                            </h3>
+            <div className="Section">
+                <NavbarPage /> <br />
+                <div className="container">
+                    <div className="card">
+                        <div className="card-header">
+                            <div className="card-header bg-gradient-primary">
+                                <h3 className="text-white">
+                                    &nbsp;<AiOutlineAudit size={25} color="white" /> List of Member
+                                </h3>
+                            </div>
                         </div>
-                    </div>
-                    <div className="card-body">
-                        <ul className="list-group">
-                            {this.state.members.map(member => (
-                                <li className="list-group-item">
-                                    <div className="row">
-                                        <div className="col-lg-5">
-                                            <small className="text-info">Nama</small> <br />
-                                            <h5>{member.nama}</h5>
-                                        </div>
-                                        <div className="col-lg-3">
-                                            <small className="text-info">Gender <br /></small>
-                                            <h5>{member.jenis_kelamin}</h5>
-                                        </div>
-                                        <div className="col-lg-4">
-                                            <small className="text-info">Telepon <br /></small>
-                                            <h5>{member.telepon}</h5>
-                                        </div>
-                                        <div className="col-lg-5">
-                                            <small className="text-info">Alamat <br /></small>
-                                            <h5>{member.alamat}</h5>
-                                        </div>
-                                        <div className="col-lg-2">
-                                            <small className={`text-info ${this.state.visible ? `` : `d-none`}`}>Action <br /></small>
-                                            <button className={`btn btn-warning btn-sm mx-1 ${this.state.visible ? `` : `d-none`}`}
-                                                onClick={() => this.ubahData(member.id_member)}>
-                                                Edit
-                                            </button>
-
-                                            <button className={`btn btn-danger btn-sm ${this.state.visible ? `` : `d-none`}`}
-                                                onClick={() => this.hapusData(member.id_member)}>
-                                                Hapus
-                                            </button>
-                                        </div>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-                        <button type="button" className={`btn btn-outline-success my-2 ${this.state.visible ? `` : `d-none`}`}
-                            onClick={() => this.tambahData()}>
-                            Tambah
-                        </button>
-                    </div>
-                    <div className="modal" id="modal_member">
-                        <div className="modal-dialog modal-md">
-                            <div className="modal-content">
-                                <div className="modal-header bg-success">
-                                    <h4 className="text-title">
-                                        Form Data Member
-                                    </h4>
+                        <div className="card-body">
+                            <div className="row">
+                                <div className="col-sm-8">
+                                    <button className={`btn btn-outline-success my-2 ${this.state.visible ? `` : `d-none`}`}
+                                        onClick={() => this.tambahData()}>
+                                        Tambah Member
+                                    </button>
                                 </div>
+                                <div className="col-sm-4 my-2">
+                                    <div class="d-flex">
+                                        <IoMdSearch style={{ marginLeft: "1rem", marginTop: "0.5rem", position: "absolute" }} color="#9a55ff" size="1.5em"/>
+                                        <input class="form-control me-2 px-5" type="search" placeholder="Search" aria-label="Search"
+                                           value={this.state.search} onChange={ev => this.setState({ search: ev.target.value })} onKeyUp={(ev) => this.searching(ev)}  />
+                                    </div>
+                                </div>
+                            </div>
+                            <ul className="list-group">
+                                {this.state.members.map(member => (
+                                    <li className="list-group-item">
+                                        <div className="row">
+                                            <div className="col-lg-5">
+                                                <small className="text-info1">Nama</small> <br />
+                                                <h5>{member.nama}</h5>
+                                            </div>
+                                            <div className="col-lg-3">
+                                                <small className="text-info1">Gender <br /></small>
+                                                <h5>{member.jenis_kelamin}</h5>
+                                            </div>
+                                            <div className="col-lg-4">
+                                                <small className="text-info1">Telepon <br /></small>
+                                                <h5>{member.telepon}</h5>
+                                            </div>
+                                            <div className="col-lg-5">
+                                                <small className="text-info1">Alamat <br /></small>
+                                                <h5>{member.alamat}</h5>
+                                            </div>
+                                            <div className="col-lg-2">
+                                                <small className={`text-info1 ${this.state.visible ? `` : `d-none`}`}>Action <br /></small>
+                                                <button className={`btn btn-warning1 btn-sm mx-1 ${this.state.visible ? `` : `d-none`}`}
+                                                    onClick={() => this.ubahData(member.id_member)}>
+                                                    <MdModeEditOutline size={20} color="white" />
+                                                </button>
 
-                                <div className="modal-body">
-                                    <form onSubmit={ev => this.simpanData(ev)}>
-                                        Nama
-                                        <input type="text" className="form-control mb-2"
-                                            value={this.state.nama}
-                                            onChange={(ev) => this.setState({ nama: ev.target.value })} />
+                                                <button className={`btn btn-danger1 btn-sm ${this.state.visible ? `` : `d-none`}`}
+                                                    onClick={() => this.hapusData(member.id_member)}>
+                                                    <MdDelete size={20} color="white" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                        <div className="modal" id="modal_member">
+                            <div className="modal-dialog modal-md">
+                                <div className="modal-content">
+                                    <div className="modal-header bg-gradient-success">
+                                        <h4 className="text-title text-white">
+                                            Form Data Member
+                                        </h4>
+                                    </div>
 
-                                        Jenis Kelamin
-                                        <select className="form-control mb-2"
-                                            value={this.state.jenis_kelamin}
-                                            onChange={(ev) => this.setState({ jenis_kelamin: ev.target.value })}>
-                                            <option value="Wanita">Wanita</option>
-                                            <option value="Pria">Pria</option>
-                                        </select>
+                                    <div className="modal-body">
+                                        <form onSubmit={ev => this.simpanData(ev)}>
+                                            Nama
+                                            <input type="text" className="form-control mb-2" id="nama"
+                                                value={this.state.nama}
+                                                onChange={(ev) => this.setState({ nama: ev.target.value })} />
 
-                                        Telepon
-                                        <input type="text" className="form-control mb-2"
-                                            value={this.state.telepon}
-                                            onChange={(ev) => this.setState({ telepon: ev.target.value })} />
+                                            Jenis Kelamin
+                                            <select className="form-control mb-2" id="jenis_kelamin"
+                                                value={this.state.jenis_kelamin}
+                                                onChange={(ev) => this.setState({ jenis_kelamin: ev.target.value })}>
+                                                <option value="Wanita">Wanita</option>
+                                                <option value="Pria">Pria</option>
+                                            </select>
 
-                                        Alamat
-                                        <input type="text" className="form-control mb-2"
-                                            value={this.state.alamat}
-                                            onChange={(ev) => this.setState({ alamat: ev.target.value })} />
+                                            Telepon
+                                            <input type="text" className="form-control mb-2" id="telp"
+                                                value={this.state.telepon}
+                                                onChange={(ev) => this.setState({ telepon: ev.target.value })} />
+
+                                            Alamat
+                                            <input type="text" className="form-control mb-2" id="alamat"
+                                                value={this.state.alamat}
+                                                onChange={(ev) => this.setState({ alamat: ev.target.value })} />
 
 
-                                        <button className="btn btn-success" type="submit">Simpan</button>
-                                    </form>
+                                            <button className="btn btn-success" type="submit">Simpan</button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
